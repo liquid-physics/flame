@@ -91,7 +91,8 @@ class GameRenderBox extends RenderBox with WidgetsBindingObserver {
   void _attachGame(PipelineOwner owner) {
     game.attach(owner, this);
 
-    final gameLoop = this.gameLoop = GameLoop(gameLoopCallback);
+    final gameLoop =
+        this.gameLoop = GameLoop(gameLoopCallback, gameLoopCallbackFixed);
 
     if (!game.paused) {
       gameLoop.start();
@@ -120,6 +121,14 @@ class GameRenderBox extends RenderBox with WidgetsBindingObserver {
     }
     game.update(dt);
     markNeedsPaint();
+  }
+
+  void gameLoopCallbackFixed(double timeStep) {
+    assert(attached);
+    if (!attached) {
+      return;
+    }
+    game.fixedUpdate(timeStep);
   }
 
   @override

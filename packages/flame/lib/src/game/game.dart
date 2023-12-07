@@ -47,6 +47,8 @@ abstract mixin class Game {
   /// This should update the state of the game.
   void update(double dt);
 
+  void fixedUpdate(double timeStep);
+
   /// This should render the game.
   void render(Canvas canvas);
 

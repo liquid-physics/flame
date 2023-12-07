@@ -515,6 +515,13 @@ class Component {
     _children?.forEach((c) => c.updateTree(dt));
   }
 
+  void fixedUpdate(double timeStep) {}
+
+  void fixedUpdateTree(double timeStep) {
+    fixedUpdate(timeStep);
+    _children?.forEach((c) => c.fixedUpdateTree(timeStep));
+  }
+
   /// This method will be invoked from lifecycle if [child] has been added
   /// to or removed from its parent children list.
   void onChildrenChanged(Component child, ChildrenChangeType type) {}

@@ -14,7 +14,7 @@ import 'package:flutter/scheduler.dart';
 /// gameLoop.dispose();
 /// ```
 class GameLoop {
-  GameLoop(this.callback) {
+  GameLoop(this.callback, this.callbackFixed) {
     _ticker = Ticker(_tick);
   }
 
@@ -25,6 +25,7 @@ class GameLoop {
   /// measured in seconds, with microsecond precision. The argument will be
   /// equal to 0 on first invocation of the callback.
   void Function(double dt) callback;
+  void Function(double timeStep) callbackFixed;
 
   /// Total amount of time passed since the game loop was started.
   ///
@@ -37,12 +38,19 @@ class GameLoop {
   /// Internal object responsible for periodically calling the [callback]
   /// function.
   late final Ticker _ticker;
+  double accuTime = 0;
+  double timeStep = 1.0 / 180.0;
 
   /// This method is periodically invoked by the [_ticker].
   void _tick(Duration timestamp) {
     final durationDelta = timestamp - _previous;
     final dt = durationDelta.inMicroseconds / Duration.microsecondsPerSecond;
     _previous = timestamp;
+    accuTime += dt;
+    while (accuTime >= timeStep) {
+      callbackFixed(timeStep);
+      accuTime -= timeStep;
+    }
     callback(dt);
   }
 

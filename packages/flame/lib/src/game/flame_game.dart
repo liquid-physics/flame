@@ -140,6 +140,21 @@ class FlameGame<W extends World> extends ComponentTreeRoot
     processRebalanceEvents();
   }
 
+  @override
+  void fixedUpdate(double timeStep) {
+    if (parent == null) {
+      fixedUpdateTree(timeStep);
+    }
+  }
+
+  @override
+  void fixedUpdateTree(double timeStep) {
+    if (parent != null) {
+      fixedUpdate(timeStep);
+    }
+    children.forEach((c) => c.fixedUpdateTree(timeStep));
+  }
+
   /// This passes the new size along to every component in the tree via their
   /// [Component.onGameResize] method, enabling each one to make their decision
   /// of how to handle the resize event.
